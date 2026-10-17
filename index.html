@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VectorDB — HNSW + RAG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -153,6 +154,23 @@ button {
 
 /* ── TOOLTIP ── */
 #tip { position: fixed; display: none; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px; font-size: 11px; pointer-events: none; max-width: 220px; z-index: 200; line-height: 1.5; }
+
+/* ── PHONES & SMALL TABLETS: stack the panels and let the page scroll ── */
+@media (max-width: 900px) {
+  body { height: auto; min-height: 100vh; overflow: auto; }
+  header { flex-wrap: wrap; row-gap: 6px; padding: 10px 16px; }
+  #statsLabel { margin-left: 0; width: 100%; }
+  .layout { flex-direction: column; overflow: visible; }
+  .left-panel, .right-panel { width: 100%; border: none; border-bottom: 1px solid var(--border); overflow: visible; }
+  .right-panel { order: 2; }
+  .center-panel { order: 3; height: 60vh; min-height: 320px; flex: none; }
+  .tab-content { overflow: visible; }
+  .tab { padding: 14px 6px; font-size: 11px; }
+  .algo-btn { padding: 10px 4px; }
+  button { padding: 12px 14px; }
+  /* iOS zooms into inputs smaller than 16px */
+  input[type=text], select, textarea { font-size: 16px; }
+}
 
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -530,6 +548,12 @@ async function loadItems() {
 // ════════════════════════════════════════════════════════════
 //  DEMO SEARCH
 // ════════════════════════════════════════════════════════════
+// On stacked (phone) layouts the results sit below the controls; bring them into view
+function revealOnMobile(id) {
+  if (window.matchMedia('(max-width: 900px)').matches)
+    document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 // Header badges and left-panel buttons both pick the algorithm; keep them in sync
 function setAlgo(el) {
   selAlgo=el.dataset.algo;
@@ -557,7 +581,7 @@ async function runSearch() {
       }
       if(sw>0)queryPt={x:sx/sw+(Math.random()-.5)*.015,y:sy/sw+(Math.random()-.5)*.015};
     }
-    renderResults(searchResults); drawVecChart(emb);
+    renderResults(searchResults); drawVecChart(emb); revealOnMobile('tab-search');
   } catch(_){alert('Cannot reach server — is it running on :9999?');}
 }
 
@@ -601,7 +625,7 @@ async function runBenchmark() {
   try {
     const r=await fetch(`${API}/benchmark?v=${emb.join(',')}&k=5&metric=${metric}`);
     const d=await r.json();
-    document.getElementById('benchSec').style.display='block';
+    document.getElementById('benchSec').style.display='block'; revealOnMobile('benchSec');
     const mx=Math.max(d.bruteforceUs,d.kdtreeUs,d.hnswUs,1);
     document.getElementById('benchBars').innerHTML=[
       {lbl:'Brute Force',us:d.bruteforceUs,col:'#f38ba8'},
@@ -796,6 +820,7 @@ async function askAI() {
   const thinkDiv=document.createElement('div'); thinkDiv.className='thinking';
   thinkDiv.innerHTML='<div class="spinner"></div>Retrieving context & generating answer…';
   history.appendChild(thinkDiv);
+  revealOnMobile('chatHistory');
   history.scrollTop=history.scrollHeight;
 
   // Update the scatter plot visualizer in the background using the real 768D DB
