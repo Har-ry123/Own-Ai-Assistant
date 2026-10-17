@@ -22,8 +22,8 @@ public class VectorDBServer {
         boolean ollamaUp = ollama.isAvailable();
         System.out.println("=== VectorDB Engine (Java) ===");
 
-        // Determine base port: command-line arg > PORT env var > default 8080
-        int basePort = 8080;
+        // Determine base port: command-line arg > PORT env var > default 9999
+        int basePort = 9999;
         if (args.length > 0) {
             try {
                 basePort = Integer.parseInt(args[0]);
