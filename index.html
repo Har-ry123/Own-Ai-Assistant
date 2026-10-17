@@ -39,6 +39,8 @@ header h1 {
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
 .badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; letter-spacing: 1px; border: 1px solid var(--border); color: var(--muted); }
+.algo-badge { cursor: pointer; transition: all .2s; }
+.algo-badge:hover { color: var(--text); }
 .badge.hl { border-color: var(--accent); color: var(--accent); background: rgba(108,99,255,.12); }
 .badge.ok { border-color: var(--green); color: var(--green); background: rgba(166,227,161,.1); }
 .badge.err { border-color: var(--red); color: var(--red); background: rgba(243,139,168,.1); }
@@ -161,9 +163,9 @@ button {
 
 <header>
   <h1>Hariom</h1>
-  <span class="badge hl">HNSW</span>
-  <span class="badge">KD-TREE</span>
-  <span class="badge">BRUTE FORCE</span>
+  <span class="badge algo-badge hl" data-algo="hnsw"       onclick="setAlgo(this)">HNSW</span>
+  <span class="badge algo-badge"    data-algo="kdtree"     onclick="setAlgo(this)">KD-TREE</span>
+  <span class="badge algo-badge"    data-algo="bruteforce" onclick="setAlgo(this)">BRUTE FORCE</span>
   <span class="badge" id="ollamaBadge">OLLAMA…</span>
   <span id="statsLabel">loading…</span>
 </header>
@@ -528,9 +530,12 @@ async function loadItems() {
 // ════════════════════════════════════════════════════════════
 //  DEMO SEARCH
 // ════════════════════════════════════════════════════════════
+// Header badges and left-panel buttons both pick the algorithm; keep them in sync
 function setAlgo(el) {
-  document.querySelectorAll('.algo-btn').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on'); selAlgo=el.dataset.algo;
+  selAlgo=el.dataset.algo;
+  document.querySelectorAll('.algo-btn').forEach(b=>b.classList.toggle('on', b.dataset.algo===selAlgo));
+  document.querySelectorAll('.algo-badge').forEach(b=>b.classList.toggle('hl', b.dataset.algo===selAlgo));
+  if (document.getElementById('qInput').value.trim()) runSearch();
 }
 
 async function runSearch() {
