@@ -7,7 +7,7 @@ echo "=== VectorDB Java Server ==="
 # Option 1: Run prebuilt JAR (fastest)
 if [ -f "vectordb.jar" ]; then
     echo "Starting from vectordb.jar ..."
-    java -jar vectordb.jar
+    java -jar vectordb.jar 9999
     exit 0
 fi
 
@@ -22,5 +22,5 @@ fi
 echo "Packaging vectordb.jar ..."
 jar cfe vectordb.jar com.vectordb.VectorDBServer -C out .
 echo "Starting from rebuilt vectordb.jar ..."
-java -jar vectordb.jar
+java -jar vectordb.jar 9999
 exit 0

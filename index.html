@@ -326,19 +326,9 @@ button {
 // ════════════════════════════════════════════════════════════
 //  CONSTANTS
 // ════════════════════════════════════════════════════════════
-let API  = 'http://localhost:8080';
-const API_CANDIDATES = [
-  'http://localhost:8080',
-  'http://localhost:8081',
-  'http://localhost:8082',
-  'http://localhost:8083',
-  'http://localhost:8084',
-  'http://localhost:8085',
-  'http://localhost:8086',
-  'http://localhost:8087',
-  'http://localhost:8088',
-  'http://localhost:8089'
-];
+let API  = 'http://localhost:9999';
+// The server tries its base port and the next 9 if one is taken
+const API_CANDIDATES = Array.from({length:10}, (_,i) => 'http://localhost:' + (9999+i));
 const DIMS = 16;
 const COL  = { cs:'#00d9ff', math:'#b388ff', food:'#ffb74d', sports:'#69f0ae', doc:'#a6e3a1', default:'#90a4ae' };
 const DIM_COL = ['#00d9ff','#00d9ff','#00d9ff','#00d9ff','#b388ff','#b388ff','#b388ff','#b388ff',
@@ -560,7 +550,7 @@ async function runSearch() {
       if(sw>0)queryPt={x:sx/sw+(Math.random()-.5)*.015,y:sy/sw+(Math.random()-.5)*.015};
     }
     renderResults(searchResults); drawVecChart(emb);
-  } catch(_){alert('Cannot reach server — is it running on :8080?');}
+  } catch(_){alert('Cannot reach server — is it running on :9999?');}
 }
 
 document.getElementById('qInput').addEventListener('keydown',e=>{if(e.key==='Enter')runSearch();});
@@ -703,7 +693,7 @@ async function checkOllamaStatus() {
     badge.className='badge err'; badge.textContent='OLLAMA ✗';
     box.className='ollama-status err';
     box.innerHTML=`<span style="color:var(--red)">● Offline</span><br><br>`+
-      `Cannot reach the backend. Make sure the VectorDB server is running on localhost:8080-8089.`;
+      `Cannot reach the backend. Make sure the VectorDB server is running on localhost:9999-10008.`;
   }
 }
 
