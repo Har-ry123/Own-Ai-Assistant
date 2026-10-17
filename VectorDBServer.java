@@ -19,6 +19,10 @@ public class VectorDBServer {
 
     public static void main(String[] args) throws Exception {
         loadDemo(db);
+        // Optional model overrides, e.g. OLLAMA_MODEL=llama3.2:1b for faster answers on small servers
+        String genModel = System.getenv("OLLAMA_MODEL"), embedModel = System.getenv("OLLAMA_EMBED_MODEL");
+        if (genModel != null && !genModel.isBlank()) ollama.genModel = genModel;
+        if (embedModel != null && !embedModel.isBlank()) ollama.embedModel = embedModel;
         boolean ollamaUp = ollama.isAvailable();
         System.out.println("=== VectorDB Engine (Java) ===");
 
@@ -41,7 +45,8 @@ public class VectorDBServer {
 
         System.out.println("Attempting to bind HTTP server on starting port " + basePort + " (will try nearby ports if in use)");
         System.out.println(db.size() + " demo vectors | " + DIMS + " dims | HNSW+KD-Tree+BruteForce");
-        System.out.println("Ollama: " + (ollamaUp ? "ONLINE" : "OFFLINE (install from ollama.com)"));
+        System.out.println("Ollama: " + (ollamaUp ? "ONLINE" : "OFFLINE (install from ollama.com)")
+                + " | models: " + ollama.genModel + ", " + ollama.embedModel);
 
         HttpServer server = null;
         int boundPort = -1;

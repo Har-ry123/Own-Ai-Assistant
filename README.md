@@ -64,6 +64,32 @@ busy, the server tries the next 9 ports and prints the one it used.
 3. Restart the server. The **OLLAMA** badge in the top bar turns green.
 
 The server expects Ollama at `127.0.0.1:11434`, which is Ollama's default.
+To use a different model, set `OLLAMA_MODEL` (answers) or `OLLAMA_EMBED_MODEL`
+(embeddings) before starting, for example `OLLAMA_MODEL=llama3.2:1b` for faster
+answers on a slow machine.
+
+## Host it online for free (always on)
+
+The [`huggingface/`](huggingface/) folder holds a ready-made
+[Hugging Face Space](https://huggingface.co/spaces) setup that runs the server
+and Ollama together on Hugging Face's free tier. You get a permanent public link
+that works when your own computer is off.
+
+1. Sign in at [huggingface.co](https://huggingface.co) and click **New Space**.
+2. Name it (for example `hariom-ai-assistant`), choose **Docker** → **Blank**,
+   keep the free **CPU basic** hardware, and create it.
+3. In the Space, open **Files** → **Add file** → **Upload files**, and upload
+   `huggingface/Dockerfile` and `huggingface/README.md` from this repo. Replace
+   the existing README when asked.
+4. Wait for the build to finish (about 5–10 minutes, because it downloads the AI
+   models). Your app is then live at
+   `https://<your-username>-hariom-ai-assistant.hf.space`.
+
+The Space downloads `vectordb.jar` and `index.html` from this repo's `main`
+branch. After you change them on GitHub, open the Space's **Settings** and
+click **Factory rebuild** to update the live site. Free Spaces go to sleep after
+about 48 hours without visitors and wake up on the next visit, which takes about
+a minute.
 
 ## Share it with a public link (optional)
 
